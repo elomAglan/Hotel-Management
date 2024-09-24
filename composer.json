@@ -1,0 +1,7 @@
+{
+    "name": "hotel_management/hotel_management",
+    "description": "Gestion des réservations d'hôtel",
+    "require": {
+        "stripe/stripe-php": "^15.7"
+    }
+}

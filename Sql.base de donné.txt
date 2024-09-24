@@ -1,0 +1,90 @@
+CREATE DATABASE gestion_hotel_management;
+USE gestion_hotel_management;
+
+CREATE TABLE utilisateurs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('admin', 'user') NOT NULL DEFAULT 'user',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE clients (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL,
+    prenom VARCHAR(100) NOT NULL,
+    num_carte VARCHAR(50) UNIQUE NOT NULL,
+    telephone VARCHAR(20),
+    adresse VARCHAR(255)
+);
+
+
+
+
+CREATE TABLE chambres (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    numero_chambre VARCHAR(10) NOT NULL,
+    type_chambre VARCHAR(50) NOT NULL,
+    prix DECIMAL(10, 2) NOT NULL,
+    statut VARCHAR(20) NOT NULL,
+    date_heure_occupation DATETIME DEFAULT NULL,
+    image_url VARCHAR(255) DEFAULT NULL,
+    description TEXT DEFAULT NULL
+);
+
+
+CREATE TABLE reservations (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    client_id INT NOT NULL,
+    chambre_id INT NOT NULL,
+    date_debut DATE NOT NULL,
+    date_fin DATE NOT NULL,
+    heure_arrivee TIME NOT NULL,
+    FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE,
+    FOREIGN KEY (chambre_id) REFERENCES chambres(id) ON DELETE CASCADE
+);
+
+CREATE TABLE paiements (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    reservation_id INT NOT NULL,
+    client_id INT NOT NULL,
+    montant DECIMAL(10, 2) NOT NULL,
+    date_paiement DATETIME NOT NULL,
+    mode_paiement VARCHAR(50) NOT NULL,
+    commentaire TEXT,
+    FOREIGN KEY (reservation_id) REFERENCES reservations(id),
+    FOREIGN KEY (client_id) REFERENCES clients(id)
+);
+
+
+
+CREATE INDEX idx_reservations_client_id ON reservations(client_id);
+CREATE INDEX idx_reservations_chambre_id ON reservations(chambre_id);
+
+
+
+*/ inclure des chambres dans la table chambres */
+
+-- Insertion des chambres Standard
+INSERT INTO chambres (numero_chambre, type_chambre, prix, statut, date_heure_occupation, image_url, description) VALUES
+('101', 'Standard', 80.00, 'Libre', NULL, 'images/h9.jpg', 'Chambre Standard avec lit double et vue sur le jardin.'),
+('102', 'Standard', 85.00, 'Libre', NULL, 'images/h8.jpg', 'Chambre Standard avec deux lits simples et salle de bains privative.'),
+('103', 'Standard', 90.00, 'Libre', NULL, 'images/h7.jpg', 'Chambre Standard avec grand lit et vue sur la ville.'),
+
+-- Insertion des chambres Deluxe
+('201', 'Deluxe', 120.00, 'Libre', NULL, 'images/h3.jpg', 'Chambre Deluxe avec lit king size et baignoire spa.'),
+('202', 'Deluxe', 130.00, 'Libre', NULL, 'images/h11.jpg', 'Chambre Deluxe avec vue panoramique sur la mer.'),
+('203', 'Deluxe', 140.00, 'Libre', NULL, 'images/hh.jpg', 'Chambre Deluxe avec balcon privé et vue sur le parc.'),
+
+-- Insertion des chambres Suite
+('301', 'Suite', 200.00, 'Libre', NULL, 'images/h6.jpg', 'Suite luxueuse avec salon séparé et vue imprenable.'),
+('302', 'Suite', 220.00, 'Libre', NULL, 'images/h5.jpg', 'Suite avec jacuzzi et terrasse privée.'),
+('303', 'Suite', 250.00, 'Libre', NULL, 'images/h4.jpg', 'Suite présidentielle avec chambre à coucher et salle à manger séparées.');
+
+-- Assurez-vous que les images sont stockées dans le répertoire 'images' de votre projet ou ajustez le chemin d'accès selon votre configuration.
+
+
+
+*/ Partie 2 (site users) */
+
